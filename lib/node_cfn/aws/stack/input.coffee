@@ -34,7 +34,11 @@ module.exports = (NodeCfn) ->
 
         loop
           name = NodeCfn.NameGen.twerk()
-          name = [ @name, name ].join("-")
+          name = [
+            process.env.ENV || "staging"
+            @name
+            name
+          ].join("-")
           
           break unless stacks.filter(
             (stack) -> stack.StackName == name
