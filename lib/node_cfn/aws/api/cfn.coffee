@@ -21,6 +21,15 @@ module.exports = (NodeCfn) ->
     createStack: (params) ->
       @cfn.createStackAsync(params)
 
+    # Returns the description for a specified stack.
+    #
+    # @param [Object] params parameters to `AWS.CloudFormation#describeStacks`
+    # @return [Promise<Object>]
+    # @see http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFormation.html#describeStacks-property
+    #
+    describeStacks: (params) ->
+      @cfn.describeStacksAsync(params)
+
     # List of running CloudFormation stacks.
     #
     # @param [Object] params parameters to `AWS.CloudFormation#listStacks`
