@@ -9,7 +9,7 @@ module.exports = (NodeCfn) ->
     # @param [String] @template_path path to the CloudFormation template
     #
     constructor: (@namespace, @template_path) ->
-      @cfn = new NodeCfn.Aws.Api.Cfn()
+      @api = new NodeCfn.Aws.Api.Cfn()
 
     # Create a CloudFormation stack.
     #
@@ -18,7 +18,7 @@ module.exports = (NodeCfn) ->
     create: ->
       @params = new NodeCfn.Aws.Stack.Params(@namespace, @template_path)
       @params.build().then (params) =>
-        @cfn.createStack(params)
+        @api.createStack(params)
 
     # List all CloudFormation stacks.
     #
@@ -26,7 +26,7 @@ module.exports = (NodeCfn) ->
     # @return [Promise<Object>]
     #
     list: (params) ->
-      @cfn.listStacks(params)
+      @api.listStacks(params)
 
     # List running CloudFormation stacks.
     #
@@ -34,7 +34,7 @@ module.exports = (NodeCfn) ->
     # @return [Promise<Object>]
     #
     listRunning: (params) ->
-      @cfn.listRunningStacks(params)
+      @api.listRunningStacks(params)
 
   require("./stack/input")(NodeCfn)
   require("./stack/params")(NodeCfn)
