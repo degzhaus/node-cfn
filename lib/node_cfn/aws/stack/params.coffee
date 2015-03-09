@@ -23,9 +23,10 @@ module.exports = (NodeCfn) ->
     # @return [Promise<Object>]
     #
     build: ->
+      @stack_name = @input.getStackName()
       Promise.props(
         discovery_url: @etcdDiscoveryUrl()
-        stack_name:    @input.getStackName()
+        stack_name:    @stack_name
         template:      @cfnTemplate()
       )
       .then (options) =>
