@@ -13,28 +13,26 @@ module.exports = (NodeCfn) ->
 
     # Initializes `AWS.Stack.Input`.
     #
-    # @param [String] @template_path path to your CloudFormation template
+    # @param [String] @name stack configuration name
+    # @param [String] @config stack configuration
     #
-    constructor: (@namespace, @template_path) ->
-      @input = new NodeCfn.Aws.Stack.Input(@namespace)
+    constructor: (@name, @config) ->
+      @input = new NodeCfn.Aws.Stack.Input(@name)
 
     # Build `createStack` parameters.
     #
     # @return [Promise<Object>]
     #
     build: ->
-      @stack_name = @input.getStackName()
       Promise.props(
         discovery_url: @etcdDiscoveryUrl()
-        stack_name:    @stack_name
+        stack_name:    @input.getStackName()
         template:      @cfnTemplate()
-      )
-      .then (options) =>
-        StackName: options.stack_name
-        Parameters: [
-          ParameterKey: "DiscoveryURL"
-          ParameterValue: options.discovery_url
-        ]
+      ).then (options) =>
+        @stack_name = options.stack_name
+        
+        StackName:    options.stack_name
+        Parameters:   @stackParameters(options)
         TemplateBody: options.template.toString()
 
     # Reads the CloudFormation template and converts it to JSON.
@@ -43,7 +41,7 @@ module.exports = (NodeCfn) ->
     #
     cfnTemplate: ->
       JSON.stringify(
-        require @cfnTemplatePath()
+        (require @cfnTemplatePath())(@config)
         null
         2
       )
@@ -53,7 +51,7 @@ module.exports = (NodeCfn) ->
     # @return [String]
     #
     cfnTemplatePath: ->
-      path.resolve(__dirname, @template_path)
+      path.resolve(__dirname, @config.cfn)
 
     # Grab a new etcd discovery URL through the `etcd.io` API.
     #
@@ -61,4 +59,18 @@ module.exports = (NodeCfn) ->
     # @todo move to Etcd
     #
     etcdDiscoveryUrl: ->
-      request("https://discovery.etcd.io/new")
+      if @config.coreos
+        request("https://discovery.etcd.io/new")
+
+    # Generate Parameters value for `Api.Cfn#createStack`.
+    #
+    # @param [Object] options
+    #
+    stackParameters: (options) ->
+      if @config.coreos
+        [
+          ParameterKey: "DiscoveryURL"
+          ParameterValue: options.discovery_url
+        ]
+      else
+        []
