@@ -1,6 +1,6 @@
 {
   "name": "node-cfn",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "lib/node_cfn.js",
   "dependencies": {
     "aws-sdk": "^2.1.4",
