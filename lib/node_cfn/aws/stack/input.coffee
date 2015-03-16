@@ -66,14 +66,17 @@ module.exports = (NodeCfn) ->
     getExistingStack: (stacks) ->
       console.log ""
 
-      for stack, index in stacks
+      stacks = stacks.filter (stack, index) =>
         [ env, name, release ] = stack.StackName.split("-")
-        
-        if name == @name
-          console.log "(#{index})\t#{stack.StackName}\t#{stack.CreationTime}"
+        name == @name
+
+      throw "no stacks found" unless stacks.length
+
+      for stack, index in stacks
+        console.log "(#{index})\t#{stack.StackName}\t#{stack.CreationTime}"
 
       @ask("getExistingStack").then (index) ->
-        stacks[index]
+        stacks[parseInt(index)]
 
     # Generates a stack name and then asks if that name works.
     #
@@ -104,5 +107,5 @@ module.exports = (NodeCfn) ->
           """
         when "getExistingStack"
           """
-          Enter number(s) of the stacks:
+          Enter the number of the stack:
           """
