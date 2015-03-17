@@ -41,7 +41,7 @@ module.exports = (NodeCfn) ->
     #
     cfnTemplate: ->
       JSON.stringify(
-        (require @cfnTemplatePath())(@config)
+        (require @cfnTemplatePath())(@name, @config)
         null
         2
       )
