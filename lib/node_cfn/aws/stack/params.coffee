@@ -67,10 +67,16 @@ module.exports = (NodeCfn) ->
     # @param [Object] options
     #
     stackParameters: (options) ->
+      params = []
+
+      for key, value of @config.parameters
+        params.push
+          ParameterKey:   key
+          ParameterValue: value
+
       if @config.coreos
-        [
-          ParameterKey: "DiscoveryURL"
+        params.push
+          ParameterKey:   "DiscoveryURL"
           ParameterValue: options.discovery_url
-        ]
-      else
-        []
+
+      params
