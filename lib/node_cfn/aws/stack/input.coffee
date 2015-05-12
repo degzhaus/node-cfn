@@ -63,20 +63,23 @@ module.exports = (NodeCfn) ->
     # @param [Array<Object>] stacks output from `Stack#listRunning`
     # @return [Promise<Object>] a promise that returns the stack object
     # 
-    getExistingStack: (stacks) ->
+    getExistingStack: (stacks, env) ->
       console.log ""
 
       stacks = stacks.filter (stack, index) =>
-        [ env, name, release ] = stack.StackName.split("-")
-        name == @name
+        [ environment, name, release ] = stack.StackName.split("-")
+        name == @name && (!env || env == environment)
 
       throw "no stacks found" unless stacks.length
 
-      for stack, index in stacks
-        console.log "(#{index})\t#{stack.StackName}\t#{stack.CreationTime}"
+      if stacks.length == 1
+        Promise.resolve(stacks[0])
+      else
+        for stack, index in stacks
+          console.log "(#{index})\t#{stack.StackName}\t#{stack.CreationTime}"
 
-      @ask("getExistingStack").then (index) ->
-        stacks[parseInt(index)]
+        @ask("getExistingStack").then (index) ->
+          stacks[parseInt(index)]
 
     # Generates a stack name and then asks if that name works.
     #
