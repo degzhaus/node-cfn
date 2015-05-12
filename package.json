@@ -3,7 +3,7 @@
   "version": "0.0.9",
   "main": "lib/node_cfn.js",
   "dependencies": {
-    "aws-sdk": "^2.1.4",
+    "aws-sdk": "^2.1.27",
     "bluebird": "^2.3.11",
     "coffee-script": "^1.8.0",
     "gulp": "^3.8.10",
