@@ -16,5 +16,9 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/winton/node-cfn.git"
   }
 }
